@@ -9,8 +9,6 @@
 原脚本由 https://github.com/hhwyt/codex-install-made-easy 制造
 
 
-[中文](#中文) · [English](#english)
-
 </div>
 
 ---
@@ -34,7 +32,10 @@ irm https://raw.githubusercontent.com/hvoyai/codex/main/codex.ps1 | iex
 
 弹出「登录智谱」窗口后，用手机微信扫码（新用户扫码即注册）。剩下的全部自动完成，最后 Codex 会自己打开，可以直接用。
 
-可以把这个url链接直接丢给WorkBuddy, 让他帮您安装
+可以把下面这句话直接丢给WorkBuddy, 让他帮您安装
+```
+帮我按照这个github里的方法, 安装codex
+```
 
 ### 亮点
 

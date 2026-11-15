@@ -34,7 +34,7 @@ irm https://raw.githubusercontent.com/hvoyai/codex/main/codex.ps1 | iex
 
 可以把下面这句话直接丢给WorkBuddy, 让他帮您安装
 ```
-帮我按照这个github里的方法, 安装codex
+帮我按照https://github.com/hvoyai/codex 这个github里的方法, 安装codex
 ```
 
 ### 亮点

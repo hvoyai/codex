@@ -1,8 +1,7 @@
 <div align="center">
 
-# Codex Install Made Easy
+# Codex快速安装使用
 
-**一行命令，扫一次码，Codex 就能用。**
 
 为中国用户打造的 [OpenAI Codex](https://developers.openai.com/codex/app) 桌面应用一键安装器：<br>
 自动安装、接入智谱免费大模型、全程零配置。

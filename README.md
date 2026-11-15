@@ -6,6 +6,8 @@
 为中国用户打造的 [OpenAI Codex](https://developers.openai.com/codex/app) 桌面应用一键安装器：<br>
 自动安装、接入智谱免费大模型、全程零配置。
 
+原脚本由 https://github.com/hhwyt/codex-install-made-easy 制造
+
 
 [中文](#中文) · [English](#english)
 

@@ -7,9 +7,6 @@
 为中国用户打造的 [OpenAI Codex](https://developers.openai.com/codex/app) 桌面应用一键安装器：<br>
 自动安装、接入智谱免费大模型、全程零配置。
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey)
-![Dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
 
 [中文](#中文) · [English](#english)
 
@@ -21,7 +18,6 @@
 
 ### 快速开始
 
-安装脚本和模型列表直接从本 GitHub 仓库下载，不依赖额外的网站。需要能访问 GitHub 及 `raw.githubusercontent.com`；国内部分网络可能打不开或下载较慢，目前不保证全程国内直连。
 
 **Mac**：按 ⌘+空格，输入「终端」并回车，粘贴下面这行：
 
@@ -37,7 +33,7 @@ irm https://raw.githubusercontent.com/hvoyai/codex/main/codex.ps1 | iex
 
 弹出「登录智谱」窗口后，用手机微信扫码（新用户扫码即注册）。剩下的全部自动完成，最后 Codex 会自己打开，可以直接用。
 
-> 不想用命令行的 Windows 用户，也可以运行双击安装器 `CodexSetup.exe`（见[编译 Windows 安装器](#编译-windows-安装器)）。它没有代码签名，第一次打开时点「更多信息」→「仍要运行」。
+可以把这个url链接直接丢给WorkBuddy, 让他帮您安装
 
 ### 亮点
 
@@ -107,100 +103,5 @@ irm https://raw.githubusercontent.com/hvoyai/codex/main/codex.ps1 | iex
 - 面向用户的文字用中文大白话，代码注释用英文。
 
 ### 许可
-
-[MIT](LICENSE)
-
----
-
-## English
-
-### Quick start
-
-Scripts and the model catalog are downloaded directly from this GitHub repository, with no separate website. Access to GitHub and `raw.githubusercontent.com` is required; these may be slow or unavailable on some networks in China. End-to-end direct access in China is not guaranteed.
-
-**Mac**: press ⌘+Space, type "Terminal", press Return, and paste:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/hvoyai/codex/main/codex.sh | bash
-```
-
-**Windows**: search the Start menu for "PowerShell", open it, and paste:
-
-```powershell
-irm https://raw.githubusercontent.com/hvoyai/codex/main/codex.ps1 | iex
-```
-
-When the Zhipu login window appears, scan the QR code with WeChat (first-time users are signed up by the scan). Everything else is automatic, and Codex opens ready to use.
-
-> Windows users who prefer not to use a terminal can run the double-click installer `CodexSetup.exe` (see [Building the Windows installer](#building-the-windows-installer)). It is not code-signed; on first launch click "More info" → "Run anyway".
-
-### Highlights
-
-- **One login, everything else automatic**: scanning the QR code is the only manual step (plus one system prompt on Windows). Download, verification, installation, API key creation, configuration and a smoke test all happen on their own.
-- **Automatic package source selection**: races the download sources, picks the China mirror or the official source, and downloads in the background while you scan, with resume support.
-- **Official builds only**: on Mac it verifies OpenAI's code signature (Team ID `2DC432GLL2`); on Windows it verifies the package name, publisher and Microsoft Store signature, falling back to the Microsoft Store if any check fails.
-- **A free model out of the box**: creates an API key in your own Zhipu account and connects Codex to Zhipu's free `glm-4.7-flash`.
-- **Zero dependencies**: uses only what ships with the OS (bash, perl and WebKit on Mac; PowerShell 5.1, curl.exe and Edge on Windows).
-- **Respects your machine**: changes only the settings it must, backs up first, and is safe to rerun; if it has set you up before, it will not ask you to scan again.
-- **Clear errors**: every step is logged; on failure the screen says what to do and opens the log's folder.
-
-### How it works
-
-1. **System check and source race**: skips the download if Codex is already installed. Otherwise it measures each download source for 8 seconds and starts downloading in the background.
-   - Mac: on Apple silicon it races the China mirror against OpenAI's official source and keeps the mirror unless it is more than 30% slower than the fastest; Intel Macs use the mirror.
-   - Windows: one system prompt at the start ("Do you want to allow this app to make changes to your device?" → Yes), used only to install Codex. If the China mirror is fast enough it downloads the official package from it; otherwise it installs from the Microsoft Store (product ID `9PLM9XGG6VKS`). Afterwards it always checks that Codex really is installed, because winget reports success even when nothing was installed.
-2. **Zhipu login**: opens a separate login window with the browser engine built into the OS (WebKit on Mac, a temporary Edge profile on Windows), never touching your own browser data. The QR code refreshes every 4 minutes, for up to 60 minutes.
-3. **API key creation**: after login, the script calls the Zhipu console's own "create API key" endpoint inside that window, the same request the button sends. The full key is returned only once and goes straight to the script: never displayed, never on the clipboard.
-4. **Model test**: tries `glm-4.7-flash`, then `glm-4.5-flash`.
-5. **Configuration**: written as soon as the key exists, so a rerun after a later failure needs no new scan. Only `model`, `model_provider` and `[model_providers.zhipu]` in `config.toml` change; everything else is kept, and the original is backed up as `*.bak-<timestamp>` whenever the content changes. The key goes into `auth.json`, readable only by you.
-6. **Verify and open**: asks Codex for a one-line reply to confirm it works, then opens it.
-
-### Security and privacy
-
-- **Your key stays on your machine**: it is created in your own Zhipu account and stored only in `~/.codex/auth.json` (`%USERPROFILE%\.codex\auth.json` on Windows). It never passes through our servers and is never logged. You can delete it any time in the Zhipu console; its name starts with `Codex-`.
-- **Official builds only**: a package that fails signature verification is deleted, never installed.
-- **No clipboard access**: there is no copy-the-key step. Reading the clipboard gets a script flagged by Windows Defender as a credential stealer, and the user should not need an extra step anyway.
-- **Read before you run**: the install commands fetch scripts directly from this repository. To inspect one before running it:
-
-  ```bash
-  curl -fsSL https://raw.githubusercontent.com/hvoyai/codex/main/codex.sh -o codex.sh && less codex.sh && bash codex.sh
-  ```
-
-### Logs
-
-Every run writes a log, under `~/Library/Logs/HvoyAI/` on Mac and `%LOCALAPPDATA%\HvoyAI\logs\` on Windows. On failure the screen shows where it is and opens its folder; report problems in this repository’s [Issues](https://github.com/hvoyai/codex/issues). Before uploading a log, check and redact personal information; never upload API keys. Filing an issue requires a GitHub account; downloading and installing does not.
-
-### Repository layout
-
-| File | Purpose |
-|---|---|
-| `codex.sh` | One-command installer for Mac (Chinese-model edition) |
-| `codex.ps1` | One-command installer for Windows (Chinese-model edition) |
-| `codex-official.sh` / `codex-official.ps1` | Official edition: runs OpenAI's official install command and removes the Zhipu config left by the Chinese-model edition, after which you sign in with your own ChatGPT account |
-| `windows/CodexSetup.cs` + `build.bat` | Double-click installer for Windows: a thin shell that downloads and runs `codex.ps1`, so the exe needs no reissue when the script changes |
-
-Both platforms share one terminal UI: a digital-rain intro, a title that decodes out of noise, spinners, progress bars, a download-source race and a closing "ALL SYSTEMS GO".
-
-### Notes
-
-- The free models are limited, suit simple tasks, and are rate-limited under heavy use. For stronger models, top up on the [Zhipu platform](https://bigmodel.cn) and set `model` in `config.toml` to a paid model.
-- Key creation uses an internal Zhipu console endpoint, not a public API. It may break after a Zhipu redesign; the script then stops with a log, and we will update it.
-- Codex for Windows ships a system service (`CodexSandboxService`) that its command sandbox relies on, and Windows requires administrator consent to install it, hence the one "Yes". It cannot be avoided: without a properly installed package, the sandbox asks for elevation on every command and the app never updates. Once installed, running commands and updating need no further confirmation. If the current account is not an administrator, the script explains why and stops.
-- The Codex window is titled "ChatGPT" because OpenAI merged Codex into the ChatGPT desktop app.
-- This project is not affiliated with OpenAI or Zhipu.
-
-### Building the Windows installer
-
-On Windows, run `windows\build.bat`. It builds `windows\CodexSetup.exe` with the .NET Framework compiler that ships with Windows; no Visual Studio needed.
-
-### Contributing
-
-Issues and PRs are welcome. Before changing anything:
-
-- Keep `codex.sh` and `codex.ps1` identical in UI, steps and wording; change both together and test on both platforms.
-- Log every new step, and never log a key.
-- User-facing text is plain Chinese; code comments are English.
-
-### License
 
 [MIT](LICENSE)
